@@ -4,6 +4,11 @@ import { getArticleBySlug } from '../lib/articles'
 import { renderMarkdown } from '../lib/markdown'
 import Modal from '../components/Modal'
 
+function formatDate(date) {
+  if (!date) return null
+  return new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long' }).format(date)
+}
+
 export default function Article() {
   const { slug } = useParams()
   const art = getArticleBySlug(slug)
@@ -26,9 +31,17 @@ export default function Article() {
     }
   }
 
+  const formattedDate = formatDate(art.date)
+
   return (
     <article className="article-detail">
-      <h2>{art.title}</h2>
+      <header>
+        <p className="article-meta">
+          {art.author}
+          {formattedDate ? ` · ${formattedDate}` : ''}
+        </p>
+        <h2>{art.title}</h2>
+      </header>
       <div className="article-content" dangerouslySetInnerHTML={{ __html: renderMarkdown(art.content) }} />
       <div className="article-cta">
         <button className="btn" onClick={() => setOpen(true)}>Déposer un Écho</button>

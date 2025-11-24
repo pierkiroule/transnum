@@ -1,8 +1,15 @@
-# Exemple
+---
+title: "Exemple d’onde"
+date: "2024-04-15"
+author: "Collectif"
+---
 
-Ceci est un article d'exemple pour démontrer l'affichage Markdown.
+# Exemple d’onde
 
-- Point A
-- Point B
+Ce fichier sert de démonstration. Il contient un titre, un frontmatter et un texte en Markdown minimaliste.
 
-Fin.
+1. Définir un cadre clair.
+2. Rester concis.
+3. Partager.
+
+Merci de faire résonner vos idées.

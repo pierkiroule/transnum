@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getArticleBySlug } from '../lib/articles'
 import { renderMarkdown } from '../lib/markdown'
 import Modal from '../components/Modal'
+import { getEchoesForArticle, saveEcho } from '../lib/echoes'
+import EchoList from '../components/EchoList'
 
 function formatDate(date) {
   if (!date) return null
@@ -14,17 +16,20 @@ export default function Article() {
   const art = getArticleBySlug(slug)
   const [message, setMessage] = useState('')
   const [open, setOpen] = useState(false)
+  const [echoes, setEchoes] = useState(() => getEchoesForArticle(slug))
+
+  useEffect(() => {
+    setEchoes(getEchoesForArticle(slug))
+  }, [slug])
 
   if (!art) return <section><h2>Article non trouvé</h2></section>
 
-  function handleEchoSubmit(texte) {
+  function handleEchoSubmit({ text, type }) {
     try {
-      const raw = localStorage.getItem('echoes')
-      const echoes = raw ? JSON.parse(raw) : []
-      const newEcho = { id: Date.now(), article: slug, text: texte }
-      echoes.push(newEcho)
-      localStorage.setItem('echoes', JSON.stringify(echoes))
-      setMessage('Écho enregistré localement.')
+      const saved = saveEcho({ article: slug, text, type })
+      setEchoes((current) => [saved, ...current])
+      setMessage('Écho enregistré localement. Vous pouvez exporter ce JSON et le publier si besoin.')
+      setOpen(false)
       setTimeout(() => setMessage(''), 3000)
     } catch (e) {
       setMessage('Impossible d’enregistrer l’écho.')
@@ -48,10 +53,21 @@ export default function Article() {
         {message && <span className="echo-message">{message}</span>}
       </div>
 
+      <section className="echo-panel">
+        <div className="section-header">
+          <div>
+            <p className="eyebrow">Résonances</p>
+            <h3>Échos partagés</h3>
+            <p className="lead">Lecteurs et lectrices peuvent déposer un écho intime, pratique ou collectif.</p>
+          </div>
+        </div>
+        <EchoList echoes={echoes} />
+      </section>
+
       <Modal
         isOpen={open}
         onClose={() => setOpen(false)}
-        onSubmit={(text) => { handleEchoSubmit(text) }}
+        onSubmit={(payload) => { handleEchoSubmit(payload) }}
       />
     </article>
   )

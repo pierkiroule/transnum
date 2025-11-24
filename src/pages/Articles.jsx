@@ -25,7 +25,7 @@ export default function Articles(){
             <article key={a.slug} className="article-item">
               <div className="article-meta">{[a.author, dateLabel].filter(Boolean).join(' · ')}</div>
               <h3><Link to={`/article/${a.slug}`}>{a.title}</Link></h3>
-              <p className="article-summary">Texte concis, pensé pour être lu en une respiration.</p>
+              <p className="article-summary">{a.summary}</p>
               <div className="article-actions">
                 <Link className="btn ghost" to={`/article/${a.slug}`}>Lire</Link>
               </div>

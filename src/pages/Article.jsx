@@ -27,12 +27,12 @@ export default function Article() {
   }
 
   return (
-    <article>
+    <article className="article-detail">
       <h2>{art.title}</h2>
       <div className="article-content" dangerouslySetInnerHTML={{ __html: renderMarkdown(art.content) }} />
-      <div style={{ marginTop: 12 }}>
+      <div className="article-cta">
         <button className="btn" onClick={() => setOpen(true)}>Déposer un Écho</button>
-        {message && <span style={{ marginLeft: 12 }}>{message}</span>}
+        {message && <span className="echo-message">{message}</span>}
       </div>
 
       <Modal

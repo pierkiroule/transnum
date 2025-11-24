@@ -2,6 +2,11 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { getAllArticles } from '../lib/articles'
 
+function formatDate(date) {
+  if (!date) return null
+  return new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium' }).format(date)
+}
+
 export default function Articles(){
   const articles = getAllArticles()
   return (
@@ -14,16 +19,19 @@ export default function Articles(){
         </div>
       </div>
       <div className="article-grid">
-        {articles.map(a => (
-          <article key={a.slug} className="article-item">
-            <div className="article-meta">{a.slug}</div>
-            <h3><Link to={`/article/${a.slug}`}>{a.title}</Link></h3>
-            <p className="article-summary">Texte concis, pensé pour être lu en une respiration.</p>
-            <div className="article-actions">
-              <Link className="btn ghost" to={`/article/${a.slug}`}>Lire</Link>
-            </div>
-          </article>
-        ))}
+        {articles.map(a => {
+          const dateLabel = formatDate(a.date)
+          return (
+            <article key={a.slug} className="article-item">
+              <div className="article-meta">{[a.author, dateLabel].filter(Boolean).join(' · ')}</div>
+              <h3><Link to={`/article/${a.slug}`}>{a.title}</Link></h3>
+              <p className="article-summary">Texte concis, pensé pour être lu en une respiration.</p>
+              <div className="article-actions">
+                <Link className="btn ghost" to={`/article/${a.slug}`}>Lire</Link>
+              </div>
+            </article>
+          )
+        })}
         {articles.length === 0 && <p>Aucun article trouvé.</p>}
       </div>
     </section>
